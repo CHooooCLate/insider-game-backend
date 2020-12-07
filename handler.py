@@ -5,7 +5,9 @@ import json
 import random
 
 # デバッグするときに使う
-# from pprint import pprint
+from pprint import pprint
+
+from boto3.dynamodb.conditions import Key, Attr
 
 # DynamoDBオブジェクトの作成
 dynamodb = boto3.resource('dynamodb')
@@ -59,7 +61,22 @@ def regist(event, context):
     # レスポンスデータの作成
     response = {
         "statusCode": 200,
-        "body": json.dumps({'gameId': gameId})
+        "body": {'gameId': gameId}
+    }
+
+    return response
+
+def confirm(event, context):
+    pprint(event['query']['gameId'])
+
+    players = playerTable.scan(
+         FilterExpression=Attr('game_id').eq(event['query']['gameId'])
+    )
+    pprint(players)
+    # レスポンスデータの作成
+    response = {
+        "statusCode": 200,
+        "body": {'players': players['Items']}
     }
 
     return response
@@ -95,4 +112,4 @@ class UnAuthorizationError(Exception):
                'data': self.data
            }
         }
-        return json.dumps(response)
+        return response

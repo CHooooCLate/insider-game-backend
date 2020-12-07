@@ -20,9 +20,10 @@ functions:
       # トリガーとしてAPIGatewayを構築
       - http:
           # リソースを指定
-          path: sample/test
+          path: regist
           # メソッドを指定
           method: post
+          cors: true
           # 統合サービスをLambdaにする
           integration: lambda
           # カスタムリクエストの作成
@@ -37,6 +38,40 @@ functions:
                   },
                   "body": "$util.base64Encode($input.json(''$''))"
                   }'
+          # カスタムレスポンスの作成
+          response:
+            # ヘッダーとテンプレートの指定
+            headers:
+              Content-Type: "'application/octet-stream'"
+            template: $input.path('$')
+            # カスタムレスポンスコードの設定
+            statusCodes:
+                # デフォルトのステータスコード
+                200:
+                    pattern: ''
+                # カスタムステータスコード
+                401:
+                    pattern: '.*"statusCode": 401,.*'
+                    template: $input.path("$.errorMessage")
+                    headers:
+                      Content-Type: "'application/octet-stream'"
+
+  # 関数名を指定
+  confirm:
+    # handler関数を指定
+    handler: handler.confirm
+    timeout: 200
+    # Lambdaのイベントトリガーを設定
+    events:
+      # トリガーとしてAPIGatewayを構築
+      - http:
+          # リソースを指定
+          path: confirm
+          # メソッドを指定
+          method: get
+          cors: true
+          # 統合サービスをLambdaにする
+          integration: lambda
 
 # リソースの構築
 resources:
