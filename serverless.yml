@@ -1,0 +1,75 @@
+service: insider-game-backend
+
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  runtime: python3.8
+  region: ap-northeast-1
+  role: arn:aws:iam::412502862381:role/20190127_LambdaToDynamoDB
+
+# Lambdaを構築
+functions:
+  # 関数名を指定
+  regist:
+    # handler関数を指定
+    handler: handler.regist
+    timeout: 200
+    # Lambdaのイベントトリガーを設定
+    events:
+      # トリガーとしてAPIGatewayを構築
+      - http:
+          # リソースを指定
+          path: sample/test
+          # メソッドを指定
+          method: post
+          # 統合サービスをLambdaにする
+          integration: lambda
+          # カスタムリクエストの作成
+          request:
+            # カスタムテンプレートの作成
+            template:
+              application/octet-stream:
+                '{"headers":{
+                  #foreach($key in $input.params().header.keySet())
+                  "$key": "$input.params().header.get($key)"#if($foreach.hasNext),#end
+                  #end
+                  },
+                  "body": "$util.base64Encode($input.json(''$''))"
+                  }'
+
+# リソースの構築
+resources:
+  Resources:
+    # DynamoDBの構築
+    DynamoDbTablePlayer:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: Player
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+          - AttributeName: game_id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+          - AttributeName: game_id
+            KeyType: RANGE
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+
+    DynamoDbTableTheme:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: Theme
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
