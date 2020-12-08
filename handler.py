@@ -20,7 +20,7 @@ def regist(event, context):
     players = body['players']
 
     # ランダムにテーマ取得
-    num = random.randint(1, 5)
+    num = random.randint(1, 30)
     theme = themeTable.get_item(
         Key = {
             'id' : str(num)
