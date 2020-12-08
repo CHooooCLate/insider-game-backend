@@ -103,6 +103,8 @@ def addTheme(event, context):
         ReturnValues="UPDATED_NEW"
     )
 
+    datetimeFormat = datetime.datetime.today()
+
     themeTable.put_item(
         Item = {
             'id' : str(res['Attributes']['sequence']),
