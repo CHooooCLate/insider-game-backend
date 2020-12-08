@@ -1,0 +1,43 @@
+name: build-deploy
+
+on:
+  push:
+    branches: [ feature/20201208_introductGithubActions ]
+
+jobs:
+  deploy:
+    name: deploy
+    runs-on: ubuntu-latest
+    steps:
+
+    # Node.jsのインストール
+    - name: set up
+      uses: actions/setup-node@v1
+
+    # モジュールのチェックアウト
+    - name: checkout
+      uses: actions/checkout@v2
+      with:
+        repository: CHooooCLate/insider-game-backend
+        ref: feature/20201208_introductGithubActions
+
+    # `npm install` の実行
+    - name: set up npm
+      run: npm install
+
+    # AWSの鍵の設定
+    - name: configure aws
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ap-northeast-1
+
+    # slsコマンドの実行
+    - name: deploy
+      uses: serverless/github-action@master
+      with:
+        args: deploy --verbose --stage prod
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
