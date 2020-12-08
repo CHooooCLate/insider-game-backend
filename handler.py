@@ -20,8 +20,15 @@ def regist(event, context):
     body = event['body']
     players = body['players']
 
+    sequenceKey = 'Theme'
+    themeCount = sequenceTable.get_item(
+        Key = {
+            'sequence_key' : sequenceKey
+        }
+    )
+
     # ランダムにテーマ取得
-    num = random.randint(1, 30)
+    num = random.randint(1, themeCount['Item']['sequence'])
     theme = themeTable.get_item(
         Key = {
             'id' : str(num)
