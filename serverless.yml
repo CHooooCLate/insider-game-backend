@@ -38,23 +38,6 @@ functions:
                   },
                   "body": "$util.base64Encode($input.json(''$''))"
                   }'
-          # カスタムレスポンスの作成
-          response:
-            # ヘッダーとテンプレートの指定
-            headers:
-              Content-Type: "'application/octet-stream'"
-            template: $input.path('$')
-            # カスタムレスポンスコードの設定
-            statusCodes:
-                # デフォルトのステータスコード
-                200:
-                    pattern: ''
-                # カスタムステータスコード
-                401:
-                    pattern: '.*"statusCode": 401,.*'
-                    template: $input.path("$.errorMessage")
-                    headers:
-                      Content-Type: "'application/octet-stream'"
 
   # 関数名を指定
   confirm:
