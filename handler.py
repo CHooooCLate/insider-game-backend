@@ -13,6 +13,7 @@ from boto3.dynamodb.conditions import Key, Attr
 dynamodb = boto3.resource('dynamodb')
 playerTable = dynamodb.Table('Player')
 themeTable = dynamodb.Table('Theme')
+sequenceTable = dynamodb.Table('Sequence')
 
 def regist(event, context):
     # body部の取得
@@ -77,6 +78,43 @@ def confirm(event, context):
     response = {
         "statusCode": 200,
         "body": {'players': players['Items']}
+    }
+
+    return response
+
+def addTheme(event, context):
+    # リクエストからテーマの取得
+    theme = event['body']['theme']
+
+    sequenceKey = 'Theme'
+
+    # プレイヤーのレコードを追加
+    res = sequenceTable.update_item(
+        Key= {
+            'sequence_key': sequenceKey
+        },
+        UpdateExpression="ADD #name :increment",
+        ExpressionAttributeNames={
+            '#name':'sequence'
+        },
+        ExpressionAttributeValues={
+            ":increment": int(1)
+        },
+        ReturnValues="UPDATED_NEW"
+    )
+
+    themeTable.put_item(
+        Item = {
+            'id' : str(res['Attributes']['sequence']),
+            'name' : theme,
+            'stamp' : datetimeFormat.strftime("%Y/%m/%d %H:%M:%S")
+        }
+    )
+
+    # レスポンスデータの作成
+    response = {
+        "statusCode": 200,
+        "body": {'id': str(res['Attributes']['sequence'])}
     }
 
     return response
