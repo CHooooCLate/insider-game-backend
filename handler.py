@@ -28,7 +28,7 @@ def regist(event, context):
     )
 
     # ランダムにテーマ取得
-    num = random.randint(1, themeCount)
+    num = random.randint(1, themeCount['Item']['id'])
     theme = themeTable.get_item(
         Key = {
             'id' : str(num)
