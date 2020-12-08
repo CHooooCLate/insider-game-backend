@@ -21,7 +21,7 @@ def regist(event, context):
     players = body['players']
 
     sequenceKey = 'Theme'
-    themeCount = sequenceTableget.get_item(
+    themeCount = sequenceTable.get_item(
         Key = {
             'sequence_key' : sequenceKey
         }
