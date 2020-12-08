@@ -1,8 +1,8 @@
-name: build-deploy
+name: deploy
 
 on:
   push:
-    branches: [ feature/20201208_introductGithubActions ]
+    branches: [ develop ]
 
 jobs:
   deploy:
@@ -19,7 +19,7 @@ jobs:
       uses: actions/checkout@v2
       with:
         repository: CHooooCLate/insider-game-backend
-        ref: feature/20201208_introductGithubActions
+        ref: develop
 
     # `npm install` の実行
     - name: set up npm
