@@ -1,0 +1,23 @@
+{
+  "name": "insider-game-backend",
+  "version": "1.0.0",
+  "description": "インサイダーゲームのバックエンドです。",
+  "main": "index.js",
+  "dependencies": {
+    "serverless-dynamodb-autoscaling": "^0.6.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CHooooCLate/insider-game-backend.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CHooooCLate/insider-game-backend/issues"
+  },
+  "homepage": "https://github.com/CHooooCLate/insider-game-backend#readme"
+}
