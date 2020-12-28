@@ -8,6 +8,9 @@ provider:
   region: ap-northeast-1
   role: arn:aws:iam::412502862381:role/20190127_LambdaToDynamoDB
 
+plugins:
+  - serverless-dynamodb-autoscaling
+
 # Lambdaを構築
 functions:
   # 関数名を指定
@@ -137,4 +140,3 @@ custom:
         minimum: 1
         maximum: 10
         usage: 0.75
-        
